@@ -17,7 +17,8 @@ app.use(routerfile);
 
 seq.sync()
 .then(res=>
-   { app.listen(1004);  
+   { 
+    app.listen(1020);  
 })                               
 .catch((e)=>{
    console.log(e)

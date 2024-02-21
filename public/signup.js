@@ -1,24 +1,54 @@
-const signupForm= document.querySelector('#signupForm');
-const name= document.querySelector('#name');
-const email= document.querySelector('#email');
-const password= document.querySelector('password');
+//const { response } = require("express");
 
-signupForm.addEventListener('submit',submitsignupform)
+const signupForm = document.querySelector('#signupForm');
+const nameInput = document.querySelector('#name');
+const emailInput = document.querySelector('#email');
+const passwordInput = document.querySelector('#password');
+const erroediv= document.querySelector('#errordiv');
 
-async function submitsignupform()
-{
-    const details={
-        name:name.value,
-        email:email.value,
-        password:password.value
-    }
+signupForm.addEventListener('submit', onSubmit);
+
+async function onSubmit(e) {
+  e.preventDefault();
+
+  const userDetails = {
+    name: nameInput.value,
+    email: emailInput.value,
+    password: passwordInput.value,
+  }; 
+
+  try {
     
-    try{
-        console.log(details);
-        const signupdata= await axios.post('/signupuser',details)
-        console.log("user ahs been signed")
+     userDetails.name = userDetails.name[0].toUpperCase() + userDetails.name.slice(1);
+    const char=emailInput.value;
+    const response= await axios.get('/checkinfo')
+    
+     const val= await response.data.filter((review) =>
+                 review.email.includes(char)); 
+    
+    
+    if(val.length==0){
+        const user= await axios.post('/signupuser',userDetails);
+        clearInputs();
+        erroediv.style.display='none';
+        console.log("User Has Been Created",user.data)
+
     }
-    catch(e){
-        console.log(e)
+    else{
+        
+        erroediv.style.display='block';
+        //document.body.innerHTML+=`<div class="form-group"> This Email Id has Already Registered</div>`
+        
     }
+ 
+  } catch (err) {
+    console.log('Error creating user:', err);
+    
+  }
+}
+
+function clearInputs() {
+  nameInput.value = '';
+  emailInput.value = '';
+  passwordInput.value = '';
 }
