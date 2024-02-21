@@ -32,6 +32,7 @@ async function onSubmit(e) {
         clearInputs();
         erroediv.style.display='none';
         console.log("User Has Been Created",user.data)
+        window.location.href='/login';
 
     }
     else{
