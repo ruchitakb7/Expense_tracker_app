@@ -5,6 +5,7 @@ const nameInput = document.querySelector('#name');
 const emailInput = document.querySelector('#email');
 const passwordInput = document.querySelector('#password');
 const erroediv= document.querySelector('#errordiv');
+const p=document.querySelector('#p')
 
 signupForm.addEventListener('submit', onSubmit);
 
@@ -29,17 +30,13 @@ async function onSubmit(e) {
     
     if(val.length==0){
         const user= await axios.post('/signupuser',userDetails);
-        clearInputs();
-        erroediv.style.display='none';
-        console.log("User Has Been Created",user.data)
+        clearInputs();   
         window.location.href='/login';
 
     }
     else{
         
-        erroediv.style.display='block';
-        //document.body.innerHTML+=`<div class="form-group"> This Email Id has Already Registered</div>`
-        
+        p.innerHTML=`This Email Id Has Alredy Registered`;
     }
  
   } catch (err) {

@@ -17,32 +17,28 @@ async function submitform(e)
     try{
       
         const response =await axios.post('/userloginCheck',userDetails);
-        if(response.status===200)
+        console.log(response);
+        if(response.data.success==true)
         {
+            alert(response.data.message)
             errordiv.style.display='none';
-            alert('User has been successfully logged in')
             clearInputs()
-            console.log(response.data)
         
         }
-        if(response.status===401)
-        {
-                p.innerHTML=`User Not Authorized`
-                errordiv.appendChild(p)
-                errordiv.style.display='block';
-                console.log(response.data)
-       }
-       if(response.status===404)
-       {
-            p.innerHTML=`User not Found`
-            errordiv.appendChild(p);
-            errordiv.style.display='block';    
-            console.log(response.data)
-       }
+        else{
+            clearInputs()
+            p.innerHTML=`${response.data.message}`;
+           
+            console.log(response.data.message)
+
+        }
     
     }
-    catch(e){    
-        console.log(e)
+    catch(err){   
+        p.innerHTML=`${err}`;
+        errordiv.style.display='block';
+        console.log(err)
+        
     }
 }
 

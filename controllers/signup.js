@@ -1,7 +1,9 @@
 //const { create } = require('domain');
 const Signup=require('../models/signup');
+const bcrypt= require('bcrypt');
 
 const path= require('path');
+
 
 exports.signupage= (req,res,next)=>{
 
@@ -10,20 +12,25 @@ exports.signupage= (req,res,next)=>{
 }
 
 exports.signupdetails= async (req,res,next) =>{
+    try{
+
     const name= req.body.name;
     const email=req.body.email;
     const password= req.body.password;
   
-    try{
-        const signupdetail= await Signup.create({
-            name:name,
-            email:email,
-            password:password
-        })
-        res.status(201).json(signupdetail)
+        const saltrounds=8;
+            bcrypt.hash(password, saltrounds, async (err, hash) => {
+            console.log(err)
+
+            const signupdetail= await Signup.create({name:name,email:email,password:hash})
+
+             res.status(201).json({message:"User has been successfully logged in"});
+          })
     }
     catch(e)
-    {res.status().json({error:e})}
+    {
+        res.status().json({error:e})
+    }
 }
 
 
