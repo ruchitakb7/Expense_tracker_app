@@ -1,3 +1,4 @@
+const { userInfo } = require('os');
 const Signup=require('../models/signup');
 const path= require('path');
 
@@ -7,7 +8,7 @@ exports.login = async(req,res,next) =>{
 
 
 exports.checkuser= async(req,res,next) =>{
-    const email= req.paramsemail;
+    const {email,password} = req.body;
 
    console.log(email)
     try{   
@@ -16,11 +17,28 @@ exports.checkuser= async(req,res,next) =>{
               email:email,
             },
           });
+          
+          if(checkinfo.length>0)
+          {
+            console.log('xx')
+             if(password == checkinfo[0].password)
+             {
+                console.log(checkinfo[0].password)
+                return res.status(200).json({message:"User Has Logged In Successfully"})
+             }
+             else
+             {
+                console.log(checkinfo[0].password)
+                return res.status(401).json({message:"User Not Authorized"})
+             }
+          }
+          else{
+            return res.status(404).json({message:"User Not Found"})
+          }
        
-        res.status(201).json(checkinfo)
     }
     catch(e){
-        res.status(400).json({error:e})
+        res.status(400).json({error:"Something Went Wrong"})
     }
 }
 

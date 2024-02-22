@@ -10,46 +10,39 @@ async function submitform(e)
 {
     e.preventDefault();
 
-    const details={
+    const userDetails={
         email:emailInput.value,
         password:passwordInput.value
     }
     try{
       
-        const x= details.email;
-        const response =await axios.get(`/checkuser/${x}`);
-  
-        if(response.status===201)
+        const response =await axios.post('/userloginCheck',userDetails);
+        if(response.status===200)
         {
             errordiv.style.display='none';
-            if(response.data[0].password===details.password)
-            {
-                
-                alert('User has been successfully logged in')
-                clearInputs()
-                
-            }
-            else
-            {
-               
-                p.innerHTML=`Password  Missmatched`
+            alert('User has been successfully logged in')
+            clearInputs()
+            console.log(response.data)
+        
+        }
+        if(response.status===401)
+        {
+                p.innerHTML=`User Not Authorized`
                 errordiv.appendChild(p)
                 errordiv.style.display='block';
-                console.log("Password  Missmatched")
-                
-
-            }
-
-        }
+                console.log(response.data)
+       }
+       if(response.status===404)
+       {
+            p.innerHTML=`User not Found`
+            errordiv.appendChild(p);
+            errordiv.style.display='block';    
+            console.log(response.data)
+       }
     
     }
-    catch(e){
-        
-       
-                p.innerHTML=`User not Found`
-                errordiv.appendChild(p);
-                errordiv.style.display='block';    
-                console.log("User Not Found")
+    catch(e){    
+        console.log(e)
     }
 }
 

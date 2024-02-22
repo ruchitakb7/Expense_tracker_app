@@ -6,7 +6,7 @@ const logincontroller= require('../controllers/login');
 
 router.get('/login',logincontroller.login);
 
-router.get('/checkuser/:email',logincontroller.checkuser)
+router.post('/userloginCheck',logincontroller.checkuser)
 
 
 

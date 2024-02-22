@@ -19,7 +19,7 @@ app.use(loginrouterFile);
 seq.sync()
 .then(res=>
    { 
-    app.listen(1023);  
+    app.listen(1032);  
 })                               
 .catch((e)=>{
    console.log(e)
