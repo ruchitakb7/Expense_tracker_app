@@ -21,8 +21,9 @@ async function submitform(e)
         if(response.data.success==true)
         {
             alert(response.data.message)
-            errordiv.style.display='none';
-            clearInputs()
+           // errordiv.style.display='none';
+           // clearInputs()
+           window.location.href='/home'
         
         }
         else{

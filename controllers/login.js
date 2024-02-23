@@ -41,7 +41,7 @@ exports.checkuser= async(req,res,next) =>{
                 }  
                 if(result==true)
                 {
-                    return res.status(200).json({success:true, message: "User logged in successfully"});
+                    return res.status(200).json({success:true, message: "User has been logged in successfully"});
 
                 }
                 else
