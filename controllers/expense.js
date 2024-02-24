@@ -1,5 +1,6 @@
 const path= require('path');
 const Expense= require('../models/expense');
+const User= require('../models/user')
 
 
 
@@ -11,7 +12,7 @@ exports.expensePage = (req,res,next)=>{
 exports.addExpense= async(req,res,next) =>
 {
     try{
-
+        console.log(req.user.id)
         const expenseAmount=req.body.expenseAmount;
         const expenseDescription=req.body.expenseDescription;
         const expenseCategory=req.body.expenseCategory;
@@ -19,8 +20,10 @@ exports.addExpense= async(req,res,next) =>
         const expensedata= await Expense.create({
              expenseAmount:expenseAmount,
             expenseDescription:expenseDescription,
-            expenseCategory:expenseCategory
+            expenseCategory:expenseCategory,
+            userId:req.user.id
         })
+   
 
         res.json({success:true})
     }
@@ -34,7 +37,7 @@ exports.addExpense= async(req,res,next) =>
 exports.expenseSheet= async(req,res,next) =>{
     try{
 
-        const sheet= await Expense.findAll()
+        const sheet= await Expense.findAll({where:{userId:req.user.id}})
         res.status(201).json(sheet);
     }
     catch(e){

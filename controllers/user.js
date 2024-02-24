@@ -1,7 +1,5 @@
-//const { create } = require('domain');
-const Signup=require('../models/signup');
+const User=require('../models/user');
 const bcrypt= require('bcrypt');
-
 const path= require('path');
 
 
@@ -18,11 +16,11 @@ exports.signupdetails= async (req,res,next) =>{
     const email=req.body.email;
     const password= req.body.password;
   
-        const saltrounds=8;
+            const saltrounds=8;
             bcrypt.hash(password, saltrounds, async (err, hash) => {
             console.log(err)
 
-            const signupdetail= await Signup.create({name:name,email:email,password:hash})
+            const signupdetail= await User.create({name:name,email:email,password:hash})
 
              res.status(201).json({message:"User has been successfully logged in"});
           })
@@ -37,7 +35,7 @@ exports.signupdetails= async (req,res,next) =>{
 exports.checkemail= async(req,res,next) =>{
     try{
        
-        const checkinfo= await Signup.findAll();
+        const checkinfo= await User.findAll();
        
         res.status(201).json(checkinfo)
     }

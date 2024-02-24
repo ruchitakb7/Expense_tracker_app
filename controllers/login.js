@@ -1,7 +1,12 @@
-const { userInfo } = require('os');
-const Signup=require('../models/signup');
+
+const User=require('../models/user');
 const path= require('path');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken')
+
+function generateAccessToken(id,name){
+    return jwt.sign({id:id,name:name}, 'secretkey');
+}
 
 function isstringinvalid(string){
     if(string == undefined ||string.length === 0){
@@ -17,16 +22,15 @@ exports.login = async(req,res,next) =>{
 
 
 exports.checkuser= async(req,res,next) =>{
+
     try{ 
+          const {email,password} = req.body;
 
-    const {email,password} = req.body;
+            if(isstringinvalid(email) || isstringinvalid(password)){
+            return res.status(400).json({message: 'EMail id or password is missing ', success: false})
+         }
 
-    if(isstringinvalid(email) || isstringinvalid(password)){
-        return res.status(400).json({message: 'EMail id or password is missing ', success: false})
-    }
-
-     
-        const user=  await Signup.findAll({
+        const user=  await User.findAll({
             where: {
               email:email,
             },
@@ -41,7 +45,7 @@ exports.checkuser= async(req,res,next) =>{
                 }  
                 if(result==true)
                 {
-                    return res.status(200).json({success:true, message: "User has been logged in successfully"});
+                    return res.status(200).json({success:true, message: "User has been logged in successfully",token:generateAccessToken(user[0].id,user[0].name)});
 
                 }
                 else

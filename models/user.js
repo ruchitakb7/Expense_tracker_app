@@ -2,7 +2,7 @@ const Sequelize = require('sequelize');
 
 const sequelize=require('../util/database');
 
-const Signup = sequelize.define('signup',{
+const Signup = sequelize.define('user',{
     id:{
         type:Sequelize.INTEGER,
         allowNull:false,

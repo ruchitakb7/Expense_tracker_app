@@ -1,7 +1,7 @@
 const express= require('express');
 const router= express.Router()
 
-const controllerpage= require('../controllers/signup');
+const controllerpage= require('../controllers/user');
 
 
 router.get('/signup',controllerpage.signupage);

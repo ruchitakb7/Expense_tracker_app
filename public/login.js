@@ -21,9 +21,8 @@ async function submitform(e)
         if(response.data.success==true)
         {
             alert(response.data.message)
-           // errordiv.style.display='none';
-           // clearInputs()
-           window.location.href='/home'
+            localStorage.setItem('token',response.data.token);
+            window.location.href='/home'
         
         }
         else{

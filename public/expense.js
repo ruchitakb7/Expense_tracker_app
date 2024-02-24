@@ -21,13 +21,12 @@ async function addExpense(e)
     }
 
     try{
-
-        const response=await axios.post('/addExpense',p);
-        if(response.data.success==true)
+        const token = localStorage.getItem('token');
+       
+        const response=await axios.post('/addExpense',p,{headers:{"Authorization":token}});
+      //  if(response.data.success==true)
         location.href='/home';
-        else{
-            alert("something went wrong")
-        }
+      
     }
     catch(e)
     {
@@ -36,10 +35,12 @@ async function addExpense(e)
 
 }
 
-async function expenseSheet()
+async function expenseSheet()  //refresh
 {
     try{
-        const sheet= await axios.get('/Expensesheet');
+        const token = localStorage.getItem('token');
+      //  console.log(token)
+        const sheet= await axios.get('/Expensesheet',{headers:{"Authorization":token}});
         printSheet(sheet.data);
     }
     catch(e)
@@ -84,8 +85,8 @@ async function printSheet(expenseData)
 async function deleteExpense(p)
 {
     try{
-
-        const response= await axios.delete(`/deleteexpense/${p.id}`)
+        const token = localStorage.getItem('token');  
+        const response= await axios.delete(`/deleteexpense/${p.id}`,{headers:{"Authorization":token}})
         location.href='/home';
     }
     catch(e){
