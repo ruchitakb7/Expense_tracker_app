@@ -12,7 +12,7 @@ exports.expensePage = (req,res,next)=>{
 exports.addExpense= async(req,res,next) =>
 {
     try{
-        console.log(req.user.id)
+       // console.log(req.user.id)
         const expenseAmount=req.body.expenseAmount;
         const expenseDescription=req.body.expenseDescription;
         const expenseCategory=req.body.expenseCategory;
@@ -23,9 +23,8 @@ exports.addExpense= async(req,res,next) =>
             expenseCategory:expenseCategory,
             userId:req.user.id
         })
-   
-
-        res.json({success:true})
+        
+        res.json(expensedata)
     }
     catch(e)
     {
@@ -58,4 +57,35 @@ exports.deleteExpense= async(req,res,next) =>{
     {
         console.log(e)
     }
+}
+
+
+exports.getexpenseData= async(req,res,nex)=>{
+    try{
+      //  const id=req.body.userId;
+         const expense= await Expense.findAll({where:{userId:req.user.id}});
+         res.json(expense)
+    }
+    catch(e){console.log(e)}
+}
+
+exports.updateExpense= async(req,res,next)=>{
+    try{
+        const id= req.body.id;
+        const sum=req.body.sum;
+
+        const response= await User.update({totalExpenses:sum},{where:{id:id}})
+        res.json(response)
+
+    }
+    catch(e){console.log(e)}
+}
+
+exports.leaderboard= async(req,res,next)=>{
+    try{
+
+          const userdata= await User.findAll()
+          res.json(userdata);
+    }
+    catch(e){res.json(e)}
 }

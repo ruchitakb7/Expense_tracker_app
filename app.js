@@ -8,6 +8,7 @@ const User= require('./models/user.js');
 const Expense= require('./models/expense.js');
 const Order = require('./models/order.js');
 
+
 app.use(express.json());
 app.use(express.static('public')) 
 app.use(express.static(path.join(__dirname, "views"))) 
@@ -31,7 +32,7 @@ Order.belongsTo(User);
 seq.sync()
 .then(res=>
    { 
-    app.listen(1076);  
+    app.listen(1089);  
 })                               
 .catch((e)=>{
    console.log(e)

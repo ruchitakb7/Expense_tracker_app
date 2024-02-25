@@ -33,11 +33,12 @@
             </div>
             <button type="submit" class="btn btn-info btn-block">Add Expense</button><br>
         </form>
-        <div id="premium">
-            <button type="submit" class="btn btn-success" id="rzrpay">Buy Premium Membership</button>
+        <div id="premium" style="color: green; font-weight: bold;">
+      <!--    <button type="submit" class="btn btn-success" id="rzrpay">Buy Premium Membership</button> --> 
         </div>
-        <br>
-    
+        
+      <br>
+      <center><h2 style="font-family:'Times New Roman', Times, serif;font-weight: bold;color: skyblue;">Expense Data</h2></center>
         <table class="table" id="table">
             <thead>
                 <th>ExpenseAmount</th>
@@ -49,6 +50,20 @@
 
             </tbody>
         </table>
+        <br>
+        <center>  <div id="leaderboard" style="width: 30%; display: none;" >
+      <h2  style="border: 2px;color: skyblue;font-weight: bold;font-family: 'Times New Roman', Times, serif;"> LeaderBoard</h2> 
+        <table class="table">
+            <thead>
+               <th>Name</th>
+               <th>Total Expense(INR)</th>
+            </thead>
+            <tbody id="tbody">
+
+            </tbody>
+
+        </table>
+    </div> </center> 
 
     </div>
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>

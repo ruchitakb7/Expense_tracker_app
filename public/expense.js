@@ -7,6 +7,9 @@ const expenseCategory = document.querySelector('#expenseCategory');
 const Tbody= document.querySelector('#Tbody');
 const rzrpay = document.querySelector('#rzrpay');
 const premium = document.querySelector('#premium');
+const paybtn = document.createElement('button');
+const leaderboardbtn = document.createElement('button');
+const leaderboard = document.querySelector('#leaderboard');
 
 expenseForm.addEventListener('submit',addExpense)
 window.addEventListener('DOMContentLoaded',expenseSheet);
@@ -26,7 +29,7 @@ async function addExpense(e)
         const token = localStorage.getItem('token');
        
         const response=await axios.post('/addExpense',p,{headers:{"Authorization":token}});
-      //  if(response.data.success==true)
+         updateUseratble();
         location.href='/home';
       
     }
@@ -45,6 +48,8 @@ async function expenseSheet(e)  //refresh
       //  console.log(token)
         const sheet= await axios.get('/Expensesheet',{headers:{"Authorization":token}});
         showPremiumusermessage(sheet.data.premium)
+        updateUseratble();
+        printSheet(sheet.data.expenses)
     }
     catch(e)
     {
@@ -92,13 +97,14 @@ async function deleteExpense(p)
         const token = localStorage.getItem('token');  
         const response= await axios.delete(`/deleteexpense/${p.id}`,{headers:{"Authorization":token}})
         location.href='/home';
+        
     }
     catch(e){
         console.log(e)
     }
 }
 
-document.getElementById('rzrpay').onclick = async function (e) {
+    paybtn.onclick = async function (e) {
     const token=localStorage.getItem('token');
     const response = await axios.get('/purchase/premiummembership', {headers:{"Authorization":token}});
   
@@ -133,10 +139,96 @@ document.getElementById('rzrpay').onclick = async function (e) {
   function showPremiumusermessage(premiumcheck)
 {
     if(premiumcheck.ispremiumuser==true){
-        rzrpay.style.display="none";
-        //visibility hidden takes space display none takes no space
-        premium.innerHTML+="You are now a Premium User"
+        premium.innerHTML+="You are now a Premium User !    "
+        leaderboardbtn.appendChild(document.createTextNode('Show LeaderBoard'))
+        premium.appendChild(leaderboardbtn);
+        leaderboardbtn.setAttribute('class','btn btn-success')
+        leaderboardbtn.addEventListener('click',()=>{getdataforleaderboard()})
+
+    }
+    else{
+        paybtn.appendChild(document.createTextNode('Buy Premium Membership'))
+        premium.appendChild(paybtn);
+        paybtn.setAttribute('class','btn btn-success');
+
     }
    
-   
 }
+
+async function updateUseratble(expesnseinfo)
+{
+    try{
+        const token=localStorage.getItem('token');
+        const userexpesnes= await axios.get('/user_expenses',{headers:{"Authorization":token}});
+        console.log(userexpesnes.data);
+        let sum=0
+        userexpesnes.data.forEach(ex=>{
+        sum=sum+ex.expenseAmount;
+       })
+       totalexpense(sum,userexpesnes.data[0].userId);
+       console.log(sum)
+    }
+    catch(e){console.log(e)}
+}
+
+async function totalexpense(tsum,userID){
+    try{
+        const p={
+            sum:tsum,
+            id:userID
+        }
+        const updatetable= await axios.post('/update_expense',p)
+        
+    }
+    catch(e){console.log(e)}
+
+}
+
+async function getdataforleaderboard()
+{
+    try{
+        const expensesdeata= await axios.get('/leaderboard');
+        sortexpensedata(expensesdeata.data)
+
+    }
+    catch(e){console.log(e)}
+
+}
+ function sortexpensedata(userData)
+ {
+    for(let i=0;i<userData.length;i++)
+     {
+        for(j=i+1;j<userData.length;j++)
+        {
+            if(userData[i].totalExpenses<userData[j].totalExpenses)
+            {
+                let x=userData[i];
+                userData[i]=userData[j];
+                userData[j]=x
+            }
+        }
+     }
+     console.log(userData)
+     showLeaderboard(userData)
+
+ }
+
+function showLeaderboard(userData)
+{
+    leaderboard.style.display='block'
+    const tbody= document.getElementById('tbody')
+    userData.forEach(user=>{
+        const tr=document.createElement('tr');
+        const td1= document.createElement('td');
+        const td2 = document.createElement('td');
+        td1.innerHTML=`${user.name}`;
+        td2.innerHTML=`${user.totalExpenses}`;
+
+        tr.appendChild(td1)
+        tr.appendChild(td2)
+        tbody.appendChild(tr);
+
+    }) 
+    
+}
+
