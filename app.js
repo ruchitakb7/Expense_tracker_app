@@ -6,6 +6,7 @@ const path=require('path');
 const seq = require('./util/database.js');
 const User= require('./models/user.js');
 const Expense= require('./models/expense.js');
+const Order = require('./models/order.js');
 
 app.use(express.json());
 app.use(express.static('public')) 
@@ -18,14 +19,19 @@ const loginrouterFile = require('./routes/loginrouter.js');
 app.use(loginrouterFile);
 const expenseRouterFile= require('./routes/expense.js');
 app.use(expenseRouterFile);
+const orderRouterfile= require('./routes/order.js')
+app.use(orderRouterfile);
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
 
+User.hasMany(Order);
+Order.belongsTo(User);
+
 seq.sync()
 .then(res=>
    { 
-    app.listen(1062);  
+    app.listen(1076);  
 })                               
 .catch((e)=>{
    console.log(e)

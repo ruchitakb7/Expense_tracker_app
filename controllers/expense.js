@@ -38,7 +38,9 @@ exports.expenseSheet= async(req,res,next) =>{
     try{
 
         const sheet= await Expense.findAll({where:{userId:req.user.id}})
-        res.status(201).json(sheet);
+        const premiumcheck= await User.findByPk(req.user.id);
+        
+        res.status(201).json({expenses:sheet,premium:premiumcheck});
     }
     catch(e){
         res.status(500).json(e);

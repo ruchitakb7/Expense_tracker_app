@@ -31,9 +31,13 @@
                     </select>
                 </div>
             </div>
-            <button type="submit" class="btn btn-info btn-block">Add Expense</button>
+            <button type="submit" class="btn btn-info btn-block">Add Expense</button><br>
         </form>
+        <div id="premium">
+            <button type="submit" class="btn btn-success" id="rzrpay">Buy Premium Membership</button>
+        </div>
         <br>
+    
         <table class="table" id="table">
             <thead>
                 <th>ExpenseAmount</th>
@@ -47,7 +51,7 @@
         </table>
 
     </div>
-    
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="expense.js"></script>
 </body>
 </html>
