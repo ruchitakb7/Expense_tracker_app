@@ -81,11 +81,3 @@ exports.updateExpense= async(req,res,next)=>{
     catch(e){console.log(e)}
 }
 
-exports.leaderboard= async(req,res,next)=>{
-    try{
-
-          const userdata= await User.findAll()
-          res.json(userdata);
-    }
-    catch(e){res.json(e)}
-}

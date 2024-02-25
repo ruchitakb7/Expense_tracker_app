@@ -187,31 +187,15 @@ async function totalexpense(tsum,userID){
 async function getdataforleaderboard()
 {
     try{
-        const expensesdeata= await axios.get('/leaderboard');
-        sortexpensedata(expensesdeata.data)
+       
+        const expensesdata= await axios.get('/showleaderBoard');
+        console.log(expensesdata.data)
+        showLeaderboard(expensesdata.data)
 
     }
     catch(e){console.log(e)}
 
 }
- function sortexpensedata(userData)
- {
-    for(let i=0;i<userData.length;i++)
-     {
-        for(j=i+1;j<userData.length;j++)
-        {
-            if(userData[i].totalExpenses<userData[j].totalExpenses)
-            {
-                let x=userData[i];
-                userData[i]=userData[j];
-                userData[j]=x
-            }
-        }
-     }
-     console.log(userData)
-     showLeaderboard(userData)
-
- }
 
 function showLeaderboard(userData)
 {

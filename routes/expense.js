@@ -17,7 +17,7 @@ router.get('/user_expenses',authontication.authenticate,expenseController.getexp
 
 router.post('/update_expense',expenseController.updateExpense);
 
-router.get('/leaderboard',expenseController.leaderboard);
+//router.get('/leaderboard',expenseController.leaderboard);
 
 module.exports=router;
 
