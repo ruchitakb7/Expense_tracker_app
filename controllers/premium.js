@@ -4,23 +4,20 @@ const Order=require('../models/order');
 const sequelize=require('../util/database');
 
 
- const getUserLeaderBoard=async (req,res,next)=>{
-
-    try {
-
-        const userLeaderBoardDetails=await User.findAll({ 
-        order:[['totalExpenses', 'DESC']],
-        attributes:['name','totalExpenses']
-        });
-        //console.log(userLeaderBoardDetails)
-        res.json(userLeaderBoardDetails)
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({error})
+ exports.getleaderboarddata= async (req,res,next)=>{
+    try{
+        const userdata= await User.findAll({
+          attributes:['name','totalExpenses'],
+            order:[['totalExpenses','DESC']]   
+        })
+      
+        res.json(userdata)
+    }
+    catch(e){
+        console.log(e)
     }
  }
 
- module.exports = {
-    getUserLeaderBoard
- }
+
+
+ 

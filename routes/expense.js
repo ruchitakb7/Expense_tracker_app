@@ -13,11 +13,7 @@ router.get('/Expensesheet',authontication.authenticate,expenseController.expense
 
 router.delete('/deleteexpense/:id',authontication.authenticate,expenseController.deleteExpense);
 
-router.get('/user_expenses',authontication.authenticate,expenseController.getexpenseData);
-
-router.post('/update_expense',expenseController.updateExpense);
-
-//router.get('/leaderboard',expenseController.leaderboard);
+router.get('/updateTotalExpense',authontication.authenticate,expenseController.updateTotalExpense);
 
 module.exports=router;
 

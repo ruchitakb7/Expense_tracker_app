@@ -29,7 +29,7 @@ async function addExpense(e)
         const token = localStorage.getItem('token');
        
         const response=await axios.post('/addExpense',p,{headers:{"Authorization":token}});
-         updateUseratble();
+        // updateUseratble();
         location.href='/home';
       
     }
@@ -48,7 +48,7 @@ async function expenseSheet(e)  //refresh
       //  console.log(token)
         const sheet= await axios.get('/Expensesheet',{headers:{"Authorization":token}});
         showPremiumusermessage(sheet.data.premium)
-        updateUseratble();
+        updateUsertble()
         printSheet(sheet.data.expenses)
     }
     catch(e)
@@ -130,7 +130,7 @@ async function deleteExpense(p)
     e.preventDefault();
   
     rzp1.on('payment.failed', function(response){
-      console.log(response)
+    //  console.log(response)
       alert('Something went wrong');
     //  showPremiumusermessage()
     });
@@ -143,7 +143,8 @@ async function deleteExpense(p)
         leaderboardbtn.appendChild(document.createTextNode('Show LeaderBoard'))
         premium.appendChild(leaderboardbtn);
         leaderboardbtn.setAttribute('class','btn btn-success')
-        leaderboardbtn.addEventListener('click',()=>{getdataforleaderboard()})
+     //   leaderboardbtn.addEventListener('click',()=>{getdataforleaderboard()})
+        leaderboardbtn.addEventListener('click',()=>{ getdataforleaderboard()})
 
     }
     else{
@@ -155,52 +156,32 @@ async function deleteExpense(p)
    
 }
 
-async function updateUseratble(expesnseinfo)
+async function updateUsertble()
 {
     try{
         const token=localStorage.getItem('token');
-        const userexpesnes= await axios.get('/user_expenses',{headers:{"Authorization":token}});
-        console.log(userexpesnes.data);
-        let sum=0
-        userexpesnes.data.forEach(ex=>{
-        sum=sum+ex.expenseAmount;
-       })
-       totalexpense(sum,userexpesnes.data[0].userId);
-       console.log(sum)
+        const userexpesnes= await axios.get('/updateTotalExpense',{headers:{"Authorization":token}});       
     }
     catch(e){console.log(e)}
 }
 
-async function totalexpense(tsum,userID){
-    try{
-        const p={
-            sum:tsum,
-            id:userID
-        }
-        const updatetable= await axios.post('/update_expense',p)
-        
-    }
-    catch(e){console.log(e)}
+async function getdataforleaderboard(){
+try{
+       const userData= await axios.get('/getdataforleaderboard')
+       console.log(userData.data)
+       showLeaderboard(userData.data)
 
-}
-
-async function getdataforleaderboard()
-{
-    try{
-       
-        const expensesdata= await axios.get('/showleaderBoard');
-        console.log(expensesdata.data)
-        showLeaderboard(expensesdata.data)
-
-    }
-    catch(e){console.log(e)}
-
+   }
+   catch(e){
+   console.log(e)
+   }
 }
 
 function showLeaderboard(userData)
 {
     leaderboard.style.display='block'
     const tbody= document.getElementById('tbody')
+    console.log(userData);
     userData.forEach(user=>{
         const tr=document.createElement('tr');
         const td1= document.createElement('td');
@@ -215,4 +196,6 @@ function showLeaderboard(userData)
     }) 
     
 }
+
+
 

@@ -1,6 +1,7 @@
 const path= require('path');
 const Expense= require('../models/expense');
-const User= require('../models/user')
+const User= require('../models/user');
+const sequelize = require('../util/database');
 
 
 
@@ -60,24 +61,16 @@ exports.deleteExpense= async(req,res,next) =>{
 }
 
 
-exports.getexpenseData= async(req,res,nex)=>{
+exports.updateTotalExpense=async (req,res,next)=>{
+
     try{
-      //  const id=req.body.userId;
-         const expense= await Expense.findAll({where:{userId:req.user.id}});
-         res.json(expense)
-    }
-    catch(e){console.log(e)}
-}
+        
+       const a= await Expense.sum('expenseAmount',{where:{userId:req.user.id}})
+       const userupdate= await User.update({'totalExpenses':a},{where:{id:req.user.id}})
+        res.json(userupdate);
+     }
+     catch(e){console.log(e)}
+ }
 
-exports.updateExpense= async(req,res,next)=>{
-    try{
-        const id= req.body.id;
-        const sum=req.body.sum;
 
-        const response= await User.update({totalExpenses:sum},{where:{id:id}})
-        res.json(response)
-
-    }
-    catch(e){console.log(e)}
-}
 

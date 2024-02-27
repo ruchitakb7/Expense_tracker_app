@@ -26,7 +26,7 @@ const Signup = sequelize.define('user',{
         type: Sequelize.BOOLEAN,
         defaultValue: 0
       },
-    totalExpenses:{
+      totalExpenses :{
       type:Sequelize.INTEGER,
       defaultValue:0
     }
