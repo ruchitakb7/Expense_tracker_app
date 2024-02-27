@@ -12,23 +12,28 @@ exports.expensePage = (req,res,next)=>{
 
 exports.addExpense= async(req,res,next) =>
 {
+    const t = await sequelize.transaction();
     try{
-       // console.log(req.user.id)
+       
         const expenseAmount=req.body.expenseAmount;
         const expenseDescription=req.body.expenseDescription;
         const expenseCategory=req.body.expenseCategory;
 
         const expensedata= await Expense.create({
-             expenseAmount:expenseAmount,
+            expenseAmount:expenseAmount,
             expenseDescription:expenseDescription,
             expenseCategory:expenseCategory,
-            userId:req.user.id
-        })
+            userId:req.user.id},
+            {
+                transaction:t
+            })
         
+           await t.commit();
         res.json(expensedata)
     }
     catch(e)
-    {
+    {   
+       await t.rollback();
         res.status(500).json({e})
     }
 }
@@ -36,7 +41,7 @@ exports.addExpense= async(req,res,next) =>
 
 exports.expenseSheet= async(req,res,next) =>{
     try{
-
+        
         const sheet= await Expense.findAll({where:{userId:req.user.id}})
         const premiumcheck= await User.findByPk(req.user.id);
         
@@ -49,13 +54,16 @@ exports.expenseSheet= async(req,res,next) =>{
 
 exports.deleteExpense= async(req,res,next) =>{
     try{
+        const t = await sequelize.transaction();
         const id = req.params.id;
-        const response=await Expense.destroy({where:{id:id}})
+        const response=await Expense.destroy({where:{id:id}},{transaction:t})
+        await t.commit();
         res.json({message:'Expense  Deleted'});
 
     }
     catch(e)
-    {
+    { 
+        await t.rollback()
         console.log(e)
     }
 }
@@ -64,12 +72,16 @@ exports.deleteExpense= async(req,res,next) =>{
 exports.updateTotalExpense=async (req,res,next)=>{
 
     try{
-        
-       const a= await Expense.sum('expenseAmount',{where:{userId:req.user.id}})
-       const userupdate= await User.update({'totalExpenses':a},{where:{id:req.user.id}})
+        const t = await sequelize.transaction();
+        const a= await Expense.sum('expenseAmount',{where:{userId:req.user.id}})
+        const userupdate= await User.update({'totalExpenses':a},{where:{id:req.user.id}},{transaction:t})
+        await t.commit();
         res.json(userupdate);
      }
-     catch(e){console.log(e)}
+     catch(e){
+        await t.rollback();
+        console.log(e)
+    }
  }
 
 
