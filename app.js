@@ -24,6 +24,8 @@ const orderRouterfile= require('./routes/order.js')
 app.use(orderRouterfile);
 const premiumRouterfile= require('./routes/premium.js');
 app.use(premiumRouterfile);
+const forgotpassword= require('./routes/forgotpassword.js');
+app.use(forgotpassword);
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
@@ -34,7 +36,7 @@ Order.belongsTo(User);
 seq.sync()
 .then(res=>
    { 
-    app.listen(1122);  
+    app.listen(1135);  
 })                               
 .catch((e)=>{
    console.log(e)

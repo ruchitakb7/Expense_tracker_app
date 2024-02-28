@@ -18,26 +18,27 @@ window.addEventListener('DOMContentLoaded',expenseSheet);
 async function addExpense(e)
 {
     e.preventDefault();
-
-    const p={
-        expenseAmount:expenseAmount.value,
-        expenseDescription:expenseDescription.value,
-        expenseCategory:expenseCategory.value
-    }
-
-    try{
-        const token = localStorage.getItem('token');
-       
-        const response=await axios.post('/addExpense',p,{headers:{"Authorization":token}});
-        // updateUseratble();
-        location.href='/home';
-      
-    }
-    catch(e)
-    {
-        console.log(e)
-    }
-
+  //  const token = localStorage.getItem('token');
+  //  if(token){
+        const p={
+            expenseAmount:expenseAmount.value,
+            expenseDescription:expenseDescription.value,
+            expenseCategory:expenseCategory.value
+        }
+    
+        try{
+           const token = localStorage.getItem('token');
+           
+            const response=await axios.post('/addExpense',p,{headers:{"Authorization":token}});
+            // updateUseratble();
+            location.href='/home';
+          
+        }
+        catch(e)
+        {
+            console.log(e)
+            alert('Please Login into Account');
+        }
 }
 
 async function expenseSheet(e)  //refresh

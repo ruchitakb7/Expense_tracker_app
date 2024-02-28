@@ -3,6 +3,7 @@ const emailInput = document.querySelector('#email');
 const passwordInput = document.querySelector('#password');
 const errordiv= document.querySelector('#errordiv')
 const p=document.querySelector('#p')
+const passwordbtn= document.querySelector('#pswbtn');
 
 loginForm.addEventListener('submit',submitform)
 
@@ -46,3 +47,7 @@ function clearInputs() {
     emailInput.value = '';
     passwordInput.value = '';
   }
+
+  passwordbtn.addEventListener('click',()=>{
+    window.location.href='/forgotpassword';
+  })
