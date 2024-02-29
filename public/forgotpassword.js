@@ -7,15 +7,23 @@ forgotpasswordForm.addEventListener('submit',forgotpassword)
 async function forgotpassword(e)
 {
     e.preventDefault();
-    const useremail=email.value;
-    console.log(useremail);
+    const user={
+        email:email.value
+    }
+   
     try{
-        const getemail=await axios.put(`/forgotpassword/password/${useremail}`);
+        const getemail=await axios.post('/forgotpassword/password',user);
+        if(getemail)
+        {
+            alert("link has been sent on your email id")
+        }
+        email.value="";
         console.log(getemail.data);
 
     }
     catch(e)
     {
+        alert(e)
         console.log(e)
     }
 }

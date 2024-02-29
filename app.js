@@ -36,7 +36,7 @@ Order.belongsTo(User);
 seq.sync()
 .then(res=>
    { 
-    app.listen(1135);  
+    app.listen(1152);  
 })                               
 .catch((e)=>{
    console.log(e)
