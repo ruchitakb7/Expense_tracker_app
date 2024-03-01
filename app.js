@@ -2,11 +2,14 @@ const express= require('express');
 const app= express();
 
 const path=require('path');
+const dotenv = require('dotenv');
+dotenv.config()
 
 const seq = require('./util/database.js');
 const User= require('./models/user.js');
 const Expense= require('./models/expense.js');
 const Order = require('./models/order.js');
+const forgotpasswordRequest = require('./models/forgotPasswordRequest.js');
 
 
 app.use(express.json());
@@ -33,10 +36,15 @@ Expense.belongsTo(User);
 User.hasMany(Order);
 Order.belongsTo(User);
 
+
+
+User.hasMany(forgotpasswordRequest)
+forgotpasswordRequest.belongsTo(User);
+
 seq.sync()
 .then(res=>
    { 
-    app.listen(1152);  
+    app.listen(process.env.port);  
 })                               
 .catch((e)=>{
    console.log(e)

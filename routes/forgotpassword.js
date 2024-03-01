@@ -8,5 +8,9 @@ router.get('/forgotpassword',forgotpasswordContoller.forgotpasswordForm)
 
 router.post('/forgotpassword/password',forgotpasswordContoller.forgotpassword)
 
+router.get('/password/resetpassword/:id',forgotpasswordContoller.resetpassword);
+
+router.get('/password/updatepassword/:id',forgotpasswordContoller.updatepassword)
+
 
 module.exports=router
