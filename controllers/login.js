@@ -30,11 +30,8 @@ exports.checkuser= async(req,res,next) =>{
             return res.status(400).json({message: 'EMail id or password is missing ', success: false})
          }
 
-        const user=  await User.findAll({
-            where: {
-              email:email,
-            },
-          });
+        const user=  await User.findAll({where: {email:email,},});
+          console.log(user)
         
           if(user.length > 0)
           {

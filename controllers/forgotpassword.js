@@ -85,7 +85,7 @@ exports.resetpassword= async(req,res,next) =>{
 
     const id =  req.params.id;
     const forgetpassword=await forgotPasswordRequest.findOne({where : { id:id}});
-    console.log(forgetpassword);
+  
 
         if(forgetpassword){
             await forgotPasswordRequest.update({ isActive: false},{where:{id:forgetpassword.id}});
@@ -122,21 +122,24 @@ exports.updatepassword= async(req,res,next) =>{
 
     try{
         const id= req.params.id;
-        const newpassword= req.query;
-        console.log(newpassword);
+       // const newpsw= req.query;
+        const {newpassword} = req.query;
+       
 
         const forgotpassworddata = await forgotPasswordRequest.findOne({where:{id:id}})
          const userdata = await User.findOne({where:{id:forgotpassworddata.userId}})
          if(userdata)
          {
+            console.log(userdata.password)
             let saltRound=8;
             bcrypt.hash(newpassword,saltRound,async(err,hash)=>{
                 if(err) { 
                     console.log(err)
                     throw new Error(err)
                 }
-
+                console.log(hash)
                 const updateuserdata= await User.update({password:hash},{where:{id:userdata.id}});
+                console.log(updateuserdata);
                 res.status(201).json({message:'password has been updated',success:true})
 
             })

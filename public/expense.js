@@ -10,6 +10,8 @@ const premium = document.querySelector('#premium');
 const paybtn = document.createElement('button');
 const leaderboardbtn = document.createElement('button');
 const leaderboard = document.querySelector('#leaderboard');
+const a= document.querySelector('#a');
+const selectdiv= document.getElementById('#selctdiv')
 
 expenseForm.addEventListener('submit',addExpense)
 window.addEventListener('DOMContentLoaded',expenseSheet);
@@ -18,8 +20,8 @@ window.addEventListener('DOMContentLoaded',expenseSheet);
 async function addExpense(e)
 {
     e.preventDefault();
-  //  const token = localStorage.getItem('token');
-  //  if(token){
+    const token = localStorage.getItem('token');
+   if(token){
         const p={
             expenseAmount:expenseAmount.value,
             expenseDescription:expenseDescription.value,
@@ -37,7 +39,12 @@ async function addExpense(e)
         catch(e)
         {
             console.log(e)
-            alert('Please Login into Account');
+           // alert('Please Login into Account');
+        }}
+        else{
+            a.textContent=`log In`;
+            alert('Please Login into Account')
+
         }
 }
 
@@ -144,8 +151,15 @@ async function deleteExpense(p)
         leaderboardbtn.appendChild(document.createTextNode('Show LeaderBoard'))
         premium.appendChild(leaderboardbtn);
         leaderboardbtn.setAttribute('class','btn btn-success')
-     //   leaderboardbtn.addEventListener('click',()=>{getdataforleaderboard()})
+        leaderboardbtn.style.marginRight='30px'
         leaderboardbtn.addEventListener('click',()=>{ getdataforleaderboard()})
+
+        const downloadbtn= document.createElement('button');
+        downloadbtn.appendChild(document.createTextNode('Download Report'))
+        premium.appendChild(downloadbtn);
+        downloadbtn.setAttribute('class','btn btn-success')
+        downloadbtn.addEventListener('click',()=>{downloadreport()})
+
 
     }
     else{
@@ -195,6 +209,11 @@ function showLeaderboard(userData)
         tbody.appendChild(tr);
 
     }) 
+    
+}
+
+async function downloadreport()
+{
     
 }
 
