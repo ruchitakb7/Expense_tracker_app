@@ -2,7 +2,8 @@ const path= require('path');
 const Expense= require('../models/expense');
 const User= require('../models/user');
 const sequelize = require('../util/database');
-
+const s3service = require('../service/s3service');
+//const { json } = require('sequelize');
 
 
 exports.expensePage = (req,res,next)=>{
@@ -19,7 +20,7 @@ exports.addExpense= async(req,res,next) =>
         const expenseDescription=req.body.expenseDescription;
         const expenseCategory=req.body.expenseCategory;
 
-        const expensedata= await Expense.create({
+            const expensedata= await Expense.create({
             expenseAmount:expenseAmount,
             expenseDescription:expenseDescription,
             expenseCategory:expenseCategory,
@@ -84,5 +85,24 @@ exports.updateTotalExpense=async (req,res,next)=>{
     }
  }
 
+ exports.downloadexpense= async(req,res,next) =>{
+ 
+    try{
+        const userid= req.user.id;
+        const expensedata= await Expense.findAll({where:{userId:userid}});
+        const stringfyexpensedata= JSON.stringify(expensedata)
+
+        
+        const filename = `Expense${userid}/${new Date()}.txt`;
+        const fileURL = await s3service.uploadToS3(stringfyexpensedata,filename)
+        res.status(200).json({ fileURL, success: true, err: null });
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({ fileURL: '', success: false, err: err })
+    }
+
+   
+ }
 
 

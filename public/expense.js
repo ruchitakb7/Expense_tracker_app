@@ -1,4 +1,3 @@
-//const { expenseSheet } = require("../controllers/expense");
 
 const expenseForm= document.querySelector('#expenseForm');
 const expenseAmount = document.querySelector('#expenseAmount');
@@ -17,6 +16,36 @@ expenseForm.addEventListener('submit',addExpense)
 window.addEventListener('DOMContentLoaded',expenseSheet);
 
 
+/*async function addExpense(e)
+{
+    e.preventDefault();
+        const p={
+            expenseAmount:expenseAmount.value,
+            expenseDescription:expenseDescription.value,
+            expenseCategory:expenseCategory.value
+        }
+    
+        try{
+           const token = localStorage.getItem('token');
+           if(token){
+            const response=await axios.post('/addExpense',p,{headers:{"Authorization":token}});
+            // updateUseratble();
+            location.href='/home';
+
+           }
+           else{
+              alert('First Log In to THe Account')
+
+           }    
+          
+        }
+        catch(e)
+        {
+            console.log(e)
+        }
+       
+}*/
+
 async function addExpense(e)
 {
     e.preventDefault();
@@ -33,6 +62,7 @@ async function addExpense(e)
            
             const response=await axios.post('/addExpense',p,{headers:{"Authorization":token}});
             // updateUseratble();
+            a.textContent=`log Out`;
             location.href='/home';
           
         }
@@ -42,27 +72,27 @@ async function addExpense(e)
            // alert('Please Login into Account');
         }}
         else{
-            a.textContent=`log In`;
+          
             alert('Please Login into Account')
 
         }
 }
-
 async function expenseSheet(e)  //refresh
 {
     e.preventDefault();
     try{
         const token = localStorage.getItem('token');
-      //  console.log(token)
-        const sheet= await axios.get('/Expensesheet',{headers:{"Authorization":token}});
-        showPremiumusermessage(sheet.data.premium)
-        updateUsertble()
-        printSheet(sheet.data.expenses)
-    }
-    catch(e)
-    {
-        console.log(e)
-    }
+        
+            const sheet= await axios.get('/Expensesheet',{headers:{"Authorization":token}});
+            showPremiumusermessage(sheet.data.premium)
+            updateUsertble()
+            printSheet(sheet.data.expenses)
+        
+        }
+        catch(e)
+         {   
+            console.log(e)
+         }
 
 }
 
@@ -215,7 +245,24 @@ function showLeaderboard(userData)
 async function downloadreport()
 {
     
-}
+        const token= localStorage.getItem('token');
+        await axios.get('/user/download',{headers:{"Authorization":token}})
+        .then((response)=>{
+            if(response.status === 200){
+                var a = document.createElement("a");
+                a.href = response.data.fileURL;
+                a.download = 'myExpense.txt';
+                a.click();
+            } 
+            else {
+                throw new Error(response.data.message)
+            }
 
+        }) 
+        .catch((err) => {
+            console.log(err)
+        });
+
+}
 
 
