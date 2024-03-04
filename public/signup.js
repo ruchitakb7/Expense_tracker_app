@@ -20,7 +20,7 @@ async function onSubmit(e) {
 
   try {
     
-     userDetails.name = userDetails.name[0].toUpperCase() + userDetails.name.slice(1);
+    userDetails.name = userDetails.name[0].toUpperCase() + userDetails.name.slice(1);
     const char=emailInput.value;
     const response= await axios.get('/checkinfo')
     

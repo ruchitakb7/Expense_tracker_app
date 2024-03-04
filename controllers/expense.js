@@ -3,6 +3,7 @@ const Expense= require('../models/expense');
 const User= require('../models/user');
 const sequelize = require('../util/database');
 const s3service = require('../service/s3service');
+const userservices= require('../service/userservices')
 //const { json } = require('sequelize');
 
 
@@ -89,7 +90,7 @@ exports.updateTotalExpense=async (req,res,next)=>{
  
     try{
         const userid= req.user.id;
-        const expensedata= await Expense.findAll({where:{userId:userid}});
+        const expensedata = await userservices.getExpenses(req)
         const stringfyexpensedata= JSON.stringify(expensedata)
 
         

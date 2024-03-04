@@ -16,9 +16,10 @@ expenseForm.addEventListener('submit',addExpense)
 window.addEventListener('DOMContentLoaded',expenseSheet);
 
 
-/*async function addExpense(e)
+async function addExpense(e)
 {
     e.preventDefault();
+    
         const p={
             expenseAmount:expenseAmount.value,
             expenseDescription:expenseDescription.value,
@@ -30,51 +31,20 @@ window.addEventListener('DOMContentLoaded',expenseSheet);
            if(token){
             const response=await axios.post('/addExpense',p,{headers:{"Authorization":token}});
             // updateUseratble();
-            location.href='/home';
-
-           }
-           else{
-              alert('First Log In to THe Account')
-
-           }    
-          
-        }
-        catch(e)
-        {
-            console.log(e)
-        }
-       
-}*/
-
-async function addExpense(e)
-{
-    e.preventDefault();
-    const token = localStorage.getItem('token');
-   if(token){
-        const p={
-            expenseAmount:expenseAmount.value,
-            expenseDescription:expenseDescription.value,
-            expenseCategory:expenseCategory.value
-        }
-    
-        try{
-           const token = localStorage.getItem('token');
-           
-            const response=await axios.post('/addExpense',p,{headers:{"Authorization":token}});
-            // updateUseratble();
             a.textContent=`log Out`;
             location.href='/home';
+           }
+           else{
+            a.textContent=`log In`;
+            alert('Please Login into Account')
+
+           }
           
         }
         catch(e)
         {
             console.log(e)
            // alert('Please Login into Account');
-        }}
-        else{
-          
-            alert('Please Login into Account')
-
         }
 }
 async function expenseSheet(e)  //refresh
@@ -82,11 +52,16 @@ async function expenseSheet(e)  //refresh
     e.preventDefault();
     try{
         const token = localStorage.getItem('token');
-        
+        if(token){
             const sheet= await axios.get('/Expensesheet',{headers:{"Authorization":token}});
+            a.textContent=`log Out`;
             showPremiumusermessage(sheet.data.premium)
             updateUsertble()
             printSheet(sheet.data.expenses)
+
+        } else{
+            a.textContent=`log In`;
+           }     
         
         }
         catch(e)
