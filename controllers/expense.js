@@ -106,4 +106,40 @@ exports.updateTotalExpense=async (req,res,next)=>{
    
  }
 
+ exports.getExpenses = async (req, res, next) => {
+    try {
+        
+        const check = req.user.ispremiumuser; 
+        const page = +req.query.page;
+        
+        const pageSize = +req.query.pageSize;
+        console.log(page , pageSize);
+        let totalExpenses = await req.user.countExpenses();
+
+       // console.log(totalExpenses);
+        const start_index= (page-1)*pageSize;
+        let last_index=start_index+(pageSize-1);
+        if(last_index>totalExpenses)
+        last_index=totalExpenses;
+
+        const data=await req.user.getExpenses({
+               offset:(page-1)*pageSize,
+               limit: pageSize,
+               order:[['id','DESC']]
+        })
+
+        res.status(200).json({
+           allExpenses: data,
+           check,
+           start_index,
+           last_index,
+           lastPage: Math.ceil(totalExpenses / pageSize) 
+        })
+
+    } catch (err) {
+        console.error('Error fetching expenses:', err);
+        res.status(500).json({ error: err });
+    }
+}
+
 

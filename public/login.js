@@ -23,6 +23,7 @@ async function submitform(e)
         {
             alert(response.data.message)
             localStorage.setItem('token',response.data.token);
+            localStorage.removeItem('pageSize','page')
             window.location.href='/home'
         
         }

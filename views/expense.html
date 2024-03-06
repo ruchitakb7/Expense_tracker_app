@@ -18,7 +18,6 @@
         img{
             height:100px;
         }
-        
     </style>
 </head>
 <body>
@@ -57,9 +56,15 @@
         </div>
         
       <br>
+      <div id="pagerecord">
+        <input type="number" class="form-control" style="width: 150px;" id="pagesizeval" required min="1" max="10" placeholder="select number">
+        <button class="btn btn-info" id="pagebtn">show</button><br>
+        </div>
+      <div>
       <center><h2 style="font-family:'Times New Roman', Times, serif;font-weight: bold;color: skyblue;">Expense Data</h2></center>
         <table class="table" id="table">
             <thead>
+                <th>Sr.No.</th>
                 <th>ExpenseAmount</th>
                 <th>ExpenseDescription</th>
                 <th>ExpenseCategory</th>
@@ -69,7 +74,11 @@
 
             </tbody>
         </table>
+    </div>
         <br>
+        <div id="pagination" class="pagination">
+
+        </div>
         <center>  <div id="leaderboard" style="width: 30%; display: none;" >
       <h2  style="border: 2px;color: skyblue;font-weight: bold;font-family: 'Times New Roman', Times, serif;"> LeaderBoard</h2> 
         <table class="table">

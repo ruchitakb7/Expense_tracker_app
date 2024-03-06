@@ -11,15 +11,27 @@ const leaderboardbtn = document.createElement('button');
 const leaderboard = document.querySelector('#leaderboard');
 const a= document.querySelector('#a');
 const selectdiv= document.getElementById('#selctdiv')
+const pagebtn= document.querySelector('#pagebtn');
+const pagesizeval= document.querySelector('#pagesizeval')
+
+let page;
+let record_per_page;
+pagebtn.addEventListener('click',()=>{
+    record_per_page=pagesizeval.value 
+    localStorage.setItem('pageSize',record_per_page);
+    localStorage.setItem('page',1)
+    location.href='/home'
+})
+
 
 expenseForm.addEventListener('submit',addExpense)
+
 window.addEventListener('DOMContentLoaded',expenseSheet);
 
 
 async function addExpense(e)
 {
-    e.preventDefault();
-    
+    e.preventDefault();    
         const p={
             expenseAmount:expenseAmount.value,
             expenseDescription:expenseDescription.value,
@@ -30,7 +42,6 @@ async function addExpense(e)
            const token = localStorage.getItem('token');
            if(token){
             const response=await axios.post('/addExpense',p,{headers:{"Authorization":token}});
-            // updateUseratble();
             a.textContent=`log Out`;
             location.href='/home';
            }
@@ -50,14 +61,31 @@ async function addExpense(e)
 async function expenseSheet(e)  //refresh
 {
     e.preventDefault();
+   // pagesizeval.value=record_per_page;
+
     try{
         const token = localStorage.getItem('token');
         if(token){
-            const sheet= await axios.get('/Expensesheet',{headers:{"Authorization":token}});
+            const record=localStorage.getItem('pageSize')
+            if(!record)
+            {
+                page=1;
+                record_per_page=4;
+                pagesizeval.value=record_per_page;
+                localStorage.setItem('pageSize',record_per_page)
+            }
+            else{
+                record_per_page=record;
+                pagesizeval.value=record;
+                page=localStorage.getItem('page')
+            }
+            const res = await axios.get(`/Expensesheet?page=${page}&pageSize=${record_per_page}`,{headers:{"Authorization":token}});
+            console.log(res.data);
             a.textContent=`log Out`;
-            showPremiumusermessage(sheet.data.premium)
             updateUsertble()
-            printSheet(sheet.data.expenses)
+            generatepage(res.data.lastPage)
+            showPremiumusermessage(res.data.check)
+            printSheet(res.data.allExpenses)      
 
         } else{
             a.textContent=`log In`;
@@ -73,10 +101,12 @@ async function expenseSheet(e)  //refresh
 
 async function printSheet(expenseData)
 {
-    
+   
+    document.getElementById('table').value="";
     expenseData.forEach(p=>{
 
         const tr= document.createElement('tr');
+        const td0= document.createElement('td');
         const td1= document.createElement('td');
         const td2= document.createElement('td');
         const td3= document.createElement('td');
@@ -239,5 +269,67 @@ async function downloadreport()
         });
 
 }
+  
+  function generatepage(pagenumber)
+  {
+    
+    let prvbtn=`<li class="page-item" >
+    <a class="page-link" id="prvpage" onclick="prvpage()" href="javascript:void(0)">Previous</a>
+    </li>`;
 
+    let nextbtn=`<li class="page-item ">
+    <a class="page-link" id="nextpage" onclick="nextpage(${pagenumber})" href="javascript:void(0)">Next</a> 
+    </li>`;
+
+   let buttons='';
+   let activeclass='';
+    for(let i=1;i<=pagenumber;i++)
+    {
+      /*  if(i==1){
+            activeclass='active'
+        }
+        else{
+            activeclass='';
+        } */
+      buttons += `<li class="page-item ${activeclass}"><a class="page-link" onclick="currentpage(${i})" id="page${i}" href="javascript:void(0)">${i}</a> </li>`
+    
+    }
+    document.getElementById('pagination').innerHTML=`${prvbtn}${buttons}${nextbtn}`;
+   
+    
+   
+  }
+
+  function prvpage(){
+    if (page!=1)
+    {
+        page-- ;
+        console.log('prev-',page);
+        
+        localStorage.setItem('page',page)
+        location.href='/home'
+        activeclass='active'
+    }
+  
+  }
+
+  function nextpage(last)
+  {  if(page<last)
+    {    
+    page++ ;
+    console.log('next-',page);
+    localStorage.setItem('page',page)
+    //document.getElementById(`page${page}`).classList.add('active')
+    location.href='/home'
+    }
+  }
+
+  function currentpage(i)
+  {
+    page=i
+    localStorage.setItem('page',i)
+  //  document.getElementById(`page${page}`).classList.add('active')
+    location.href='/home';
+
+  }
 

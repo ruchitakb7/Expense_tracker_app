@@ -9,7 +9,7 @@ router.get('/home',expenseController.expensePage);
 
 router.post('/addExpense',authontication.authenticate,expenseController.addExpense);
 
-router.get('/Expensesheet',authontication.authenticate,expenseController.expenseSheet);
+router.get('/Expensesheet',authontication.authenticate,expenseController.getExpenses);
 
 router.delete('/deleteexpense/:id',authontication.authenticate,expenseController.deleteExpense);
 
