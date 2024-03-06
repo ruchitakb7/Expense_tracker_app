@@ -43,6 +43,8 @@ async function addExpense(e)
            if(token){
             const response=await axios.post('/addExpense',p,{headers:{"Authorization":token}});
             a.textContent=`log Out`;
+            localStorage.removeItem('page');
+            localStorage.removeItem('pageSize')
             location.href='/home';
            }
            else{
@@ -61,31 +63,19 @@ async function addExpense(e)
 async function expenseSheet(e)  //refresh
 {
     e.preventDefault();
-   // pagesizeval.value=record_per_page;
-
+   
     try{
         const token = localStorage.getItem('token');
         if(token){
-            const record=localStorage.getItem('pageSize')
-            if(!record)
-            {
-                page=1;
-                record_per_page=4;
-                pagesizeval.value=record_per_page;
-                localStorage.setItem('pageSize',record_per_page)
-            }
-            else{
-                record_per_page=record;
-                pagesizeval.value=record;
-                page=localStorage.getItem('page')
-            }
+           
+            checkrecordpage()
             const res = await axios.get(`/Expensesheet?page=${page}&pageSize=${record_per_page}`,{headers:{"Authorization":token}});
-            console.log(res.data);
+            
             a.textContent=`log Out`;
             updateUsertble()
-            generatepage(res.data.lastPage)
             showPremiumusermessage(res.data.check)
-            printSheet(res.data.allExpenses)      
+            generatepage(res.data.lastPage)
+            printSheet(res.data)      
 
         } else{
             a.textContent=`log In`;
@@ -98,13 +88,36 @@ async function expenseSheet(e)  //refresh
          }
 
 }
+function checkrecordpage()
+{
+    const record=localStorage.getItem('pageSize')
+    if(!record)
+    {
+        page=1;
+        record_per_page=4;
+        pagesizeval.value=record_per_page;
+        localStorage.setItem('pageSize',record_per_page)
+    }
+    else{
+        record_per_page=record;
+        pagesizeval.value=record;
+        page=localStorage.getItem('page')
+    }
+
+}
 
 async function printSheet(expenseData)
 {
-   
-    document.getElementById('table').value="";
-    expenseData.forEach(p=>{
+    const start=expenseData.start_index;
 
+    let i=0;
+    const expense= expenseData.allExpenses;
+    
+                           
+    document.getElementById('table').value="";
+    expense.forEach(p=>{
+
+   
         const tr= document.createElement('tr');
         const td0= document.createElement('td');
         const td1= document.createElement('td');
@@ -117,10 +130,12 @@ async function printSheet(expenseData)
         td4.appendChild(btn);
         btn.setAttribute('class','btn btn-danger');
 
+        td0.innerHTML=`${i+start}`
         td1.innerHTML=`${p.expenseAmount}`
         td2.innerHTML=`${p.expenseDescription}`
         td3.innerHTML=`${p.expenseCategory}`
 
+        tr.appendChild(td0);
         tr.appendChild(td1);
         tr.appendChild(td2);
         tr.appendChild(td3);
@@ -128,6 +143,7 @@ async function printSheet(expenseData)
         Tbody.appendChild(tr);
         
         btn.addEventListener('click',()=>{deleteExpense(p)})
+        i++;
 
     })
 
@@ -181,7 +197,7 @@ async function deleteExpense(p)
 
   function showPremiumusermessage(premiumcheck)
 {
-    if(premiumcheck.ispremiumuser==true){
+    if(premiumcheck==true){
         premium.innerHTML+="You are now a Premium User !    "
         leaderboardbtn.appendChild(document.createTextNode('Show LeaderBoard'))
         premium.appendChild(leaderboardbtn);
@@ -231,7 +247,7 @@ function showLeaderboard(userData)
 {
     leaderboard.style.display='block'
     const tbody= document.getElementById('tbody')
-    console.log(userData);
+  //  console.log(userData);
     userData.forEach(user=>{
         const tr=document.createElement('tr');
         const td1= document.createElement('td');
@@ -282,33 +298,28 @@ async function downloadreport()
     </li>`;
 
    let buttons='';
-   let activeclass='';
+   let activeclass='active';
     for(let i=1;i<=pagenumber;i++)
     {
-      /*  if(i==1){
-            activeclass='active'
-        }
-        else{
-            activeclass='';
-        } */
-      buttons += `<li class="page-item ${activeclass}"><a class="page-link" onclick="currentpage(${i})" id="page${i}" href="javascript:void(0)">${i}</a> </li>`
+       if(page==i)
+       {
+        activeclass='active'
+       }
+       else{
+        activeclass='';
+       }
+      buttons += `<li class="page-item ${activeclass} "><a class="page-link" onclick="currentpage(${i})" id="page${i}" href="javascript:void(0)">${i}</a> </li>`
     
     }
-    document.getElementById('pagination').innerHTML=`${prvbtn}${buttons}${nextbtn}`;
-   
-    
-   
+    document.getElementById('pagination').innerHTML=`${prvbtn}${buttons}${nextbtn}`; 
   }
 
   function prvpage(){
     if (page!=1)
     {
         page-- ;
-        console.log('prev-',page);
-        
         localStorage.setItem('page',page)
         location.href='/home'
-        activeclass='active'
     }
   
   }
@@ -317,9 +328,7 @@ async function downloadreport()
   {  if(page<last)
     {    
     page++ ;
-    console.log('next-',page);
     localStorage.setItem('page',page)
-    //document.getElementById(`page${page}`).classList.add('active')
     location.href='/home'
     }
   }
@@ -328,8 +337,6 @@ async function downloadreport()
   {
     page=i
     localStorage.setItem('page',i)
-  //  document.getElementById(`page${page}`).classList.add('active')
     location.href='/home';
-
   }
 

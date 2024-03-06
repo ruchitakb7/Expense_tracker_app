@@ -117,7 +117,7 @@ exports.updateTotalExpense=async (req,res,next)=>{
         let totalExpenses = await req.user.countExpenses();
 
        // console.log(totalExpenses);
-        const start_index= (page-1)*pageSize;
+        const start_index= (page-1)*pageSize +1;
         let last_index=start_index+(pageSize-1);
         if(last_index>totalExpenses)
         last_index=totalExpenses;
@@ -132,7 +132,7 @@ exports.updateTotalExpense=async (req,res,next)=>{
            allExpenses: data,
            check,
            start_index,
-           last_index,
+           last_index,           
            lastPage: Math.ceil(totalExpenses / pageSize) 
         })
 
