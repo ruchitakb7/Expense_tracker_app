@@ -18,7 +18,6 @@ async function forgotpassword(e)
             alert("link has been sent on your email id")
         }
         email.value="";
-        console.log(getemail.data);
 
     }
     catch(e)

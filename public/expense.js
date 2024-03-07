@@ -42,12 +42,13 @@ async function addExpense(e)
            const token = localStorage.getItem('token');
            if(token){
             const response=await axios.post('/addExpense',p,{headers:{"Authorization":token}});
+            console.log('Data ahs benn added successfully')
             a.textContent=`log Out`;
-            localStorage.removeItem('page');
-            localStorage.removeItem('pageSize')
+          // 
             location.href='/home';
            }
            else{
+            console.log("Do login first")
             a.textContent=`log In`;
             alert('Please Login into Account')
 
@@ -106,6 +107,7 @@ function checkrecordpage()
 
 }
 
+
 async function printSheet(expenseData)
 {
     const start=expenseData.start_index;
@@ -155,6 +157,7 @@ async function deleteExpense(p)
     try{
         const token = localStorage.getItem('token');  
         const response= await axios.delete(`/deleteexpense/${p.id}`,{headers:{"Authorization":token}})
+        console.log('Data has been deleted successfully')
         location.href='/home';
         
     }
@@ -178,7 +181,7 @@ async function deleteExpense(p)
         }, {headers:{"Authorization":token}});
       
         localStorage.setItem('token',res.data.token);
-  
+        console.log('you took premium membership')
         alert('You are a premium user now');
         location.href='/home';      
       },
@@ -189,9 +192,8 @@ async function deleteExpense(p)
     e.preventDefault();
   
     rzp1.on('payment.failed', function(response){
-    //  console.log(response)
       alert('Something went wrong');
-    //  showPremiumusermessage()
+    
     });
   }
 
@@ -226,7 +228,8 @@ async function updateUsertble()
 {
     try{
         const token=localStorage.getItem('token');
-        const userexpesnes= await axios.get('/updateTotalExpense',{headers:{"Authorization":token}});       
+        const userexpesnes= await axios.get('/updateTotalExpense',{headers:{"Authorization":token}});   
+        console.log('Data has updated')    
     }
     catch(e){console.log(e)}
 }
@@ -296,6 +299,11 @@ async function downloadreport()
     let nextbtn=`<li class="page-item ">
     <a class="page-link" id="nextpage" onclick="nextpage(${pagenumber})" href="javascript:void(0)">Next</a> 
     </li>`;
+   
+   if(page>pagenumber)
+   {
+     prvpage()
+   }
 
    let buttons='';
    let activeclass='active';

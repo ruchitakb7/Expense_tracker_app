@@ -30,6 +30,7 @@ async function onSubmit(e) {
     
     if(val.length==0){
         const user= await axios.post('/signupuser',userDetails);
+        console.log('signed up')
         clearInputs();   
         window.location.href='/login';
 

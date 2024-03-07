@@ -18,12 +18,13 @@ async function submitform(e)
     try{
       
         const response =await axios.post('/userloginCheck',userDetails);
-        console.log(response);
+        console.log('successfully logged in');
         if(response.data.success==true)
         {
             alert(response.data.message)
             localStorage.setItem('token',response.data.token);
-            localStorage.removeItem('pageSize','page')
+            localStorage.removeItem('pageSize')
+            localStorage.removeItem('page')
             window.location.href='/home'
         
         }
