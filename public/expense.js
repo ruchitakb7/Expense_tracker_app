@@ -94,7 +94,7 @@ function checkrecordpage()
     if(!record)
     {
         page=1;
-        record_per_page=4;
+        record_per_page=5;
         pagesizeval.value=record_per_page;
         localStorage.setItem('pageSize',record_per_page)
     }
