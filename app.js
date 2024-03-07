@@ -4,6 +4,7 @@ const app= express();
 const path=require('path');
 const dotenv = require('dotenv');
 dotenv.config()
+const helmet= require('helmet');
 
 const seq = require('./util/database.js');
 const User= require('./models/user.js');
@@ -29,6 +30,7 @@ const premiumRouterfile= require('./routes/premium.js');
 app.use(premiumRouterfile);
 const forgotpassword= require('./routes/forgotpassword.js');
 app.use(forgotpassword);
+app.use(helmet())
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
