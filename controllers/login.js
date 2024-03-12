@@ -35,6 +35,7 @@ exports.checkuser= async(req,res,next) =>{
         
           if(user.length > 0)
           {
+           console.log(user[0].name)
               bcrypt.compare(password,user[0].password, async(err,result)=>{
                 if (err) 
                 {

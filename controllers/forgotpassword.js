@@ -90,13 +90,16 @@ exports.resetpassword= async(req,res,next) =>{
         if(forgetpassword){
             await forgotPasswordRequest.update({ isActive: false},{where:{id:forgetpassword.id}});
             res.status(200).send(`<html>
+                                  <head>
+                                  href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+                                  <head>
                                    <body>
-                                    <form action="/password/updatepassword/${id}" method="get">
+                                   <centre> <form action="/password/updatepassword/${id}" method="get">
                                         <label for="newpassword">Enter New password</label><br>
                                         <input name="newpassword" type="password" required></input>
                                         <br>
-                                        <button>Reset Password</button>
-                                    </form>
+                                        <button class='btn btn-primary' >Reset Password</button>
+                                    </form></centre>
                                     <script>
                                         async function formsubmitted(e){
                                             e.preventDefault();

@@ -14,6 +14,7 @@
             height: 100px;
             margin-left:88%;
         
+        
         }
         img{
             height:100px;
@@ -22,9 +23,12 @@
 </head>
 <body>
     <div id="user">
-        <img src="https://media.istockphoto.com/id/1345388323/vector/human-silhouette-isolated-vector-icon.jpg?s=612x612&w=0&k=20&c=a1wg9LYywdqDUG-t9rifrf16XEdWZbWe7ajuYxJTxEI=">
+        <center>   <img src="https://media.istockphoto.com/id/1345388323/vector/human-silhouette-isolated-vector-icon.jpg?s=612x612&w=0&k=20&c=a1wg9LYywdqDUG-t9rifrf16XEdWZbWe7ajuYxJTxEI=">
         <br>
-       <center> <a href="/login" title="Login to your account" aria-label="Login to your account" id="a">Log In</a></center>
+        <p id="profile">
+            <button class="btn btn-danger" id="login" onclick="login() " style="font-size: 10px;">Log In</button>
+         </p> </center>
+       
       </div>
    <br>
     <div class="container mt-5">
@@ -56,7 +60,7 @@
         </div>
         
       <br>
-      <div id="pagerecord">
+      <div id="pagerecord" style="display: none;">
       <!-- <input type="number" class="form-control" style="width: 150px;" id="pagesizeval" required min="1" max="10" placeholder="select number">--> 
        
         <select class="form-control"  style="width: 150px;" id="pagesizeval" required>
@@ -68,7 +72,8 @@
         </select>
         <button class="btn btn-info" id="pagebtn">show</button><br>
         </div>
-      <div>
+
+      <div id="expenseTable" style="display: none;">
       <center><h2 style="font-family:'Times New Roman', Times, serif;font-weight: bold;color: skyblue;">Expense Data</h2></center>
         <table class="table" id="table">
             <thead>

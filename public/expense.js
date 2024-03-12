@@ -23,7 +23,11 @@ pagebtn.addEventListener('click',()=>{
     location.href='/home'
 })
 
-
+function login()
+{
+    
+    location.href='/login';
+}
 expenseForm.addEventListener('submit',addExpense)
 
 window.addEventListener('DOMContentLoaded',expenseSheet);
@@ -42,15 +46,14 @@ async function addExpense(e)
            const token = localStorage.getItem('token');
            if(token){
             const response=await axios.post('/addExpense',p,{headers:{"Authorization":token}});
-            console.log('Data ahs benn added successfully')
-            a.textContent=`log Out`;
+            console.log('Data has benn added successfully')
+            userprofile()
           // 
             location.href='/home';
            }
            else{
             console.log("Do login first")
-            a.textContent=`log In`;
-            alert('Please Login into Account')
+            alert('You must be logged in to access this page ')
 
            }
           
@@ -58,7 +61,7 @@ async function addExpense(e)
         catch(e)
         {
             console.log(e)
-           // alert('Please Login into Account');
+            alert('you must be logged in to access this page ');
         }
 }
 async function expenseSheet(e)  //refresh
@@ -71,16 +74,18 @@ async function expenseSheet(e)  //refresh
            
             checkrecordpage()
             const res = await axios.get(`/Expensesheet?page=${page}&pageSize=${record_per_page}`,{headers:{"Authorization":token}});
+            console.log(res.data.allExpenses)
             
-            a.textContent=`log Out`;
-            updateUsertble()
-            showPremiumusermessage(res.data.check)
+            userprofile()
+            showPremiumusermessage(res.data)
             generatepage(res.data.lastPage)
-            printSheet(res.data)      
+            if(res.data.allExpenses.length!=0){
+                updateUsertble()       
+                printSheet(res.data)
+            }
+                 
 
-        } else{
-            a.textContent=`log In`;
-           }     
+        } 
         
         }
         catch(e)
@@ -97,6 +102,7 @@ function checkrecordpage()
         page=1;
         record_per_page=5;
         pagesizeval.value=record_per_page;
+        localStorage.setItem('page',page)
         localStorage.setItem('pageSize',record_per_page)
     }
     else{
@@ -110,6 +116,8 @@ function checkrecordpage()
 
 async function printSheet(expenseData)
 {
+    document.getElementById('expenseTable').style.display='block';
+    document.getElementById('pagerecord').style.display='block';
     const start=expenseData.start_index;
 
     let i=0;
@@ -175,7 +183,7 @@ async function deleteExpense(p)
       "key":response.data.key_id,
       "order_id":response.data.order.id,
       "handler":async function(response){
-        const res = await axios.post('/purchase/updatetransactionstatus', {
+          const res = await axios.post('/purchase/updatetransactionstatus', {
           order_id:options.order_id,
           payment_id:response.razorpay_payment_id
         }, {headers:{"Authorization":token}});
@@ -197,9 +205,21 @@ async function deleteExpense(p)
     });
   }
 
-  function showPremiumusermessage(premiumcheck)
+  function userprofile()     //log out function
+  {
+    document.getElementById('profile').innerHTML=`
+    <button id='logout' class='btn btn-primary' style="font-size: 10px">Log Out</button>`
+
+    document.getElementById('logout').addEventListener('click',()=>{
+      localStorage.removeItem('token')
+      location.href='/login';
+        
+    })
+  }
+
+  function showPremiumusermessage(expenseinfo)
 {
-    if(premiumcheck==true){
+    if(expenseinfo.check==true){
         premium.innerHTML+="You are now a Premium User !    "
         leaderboardbtn.appendChild(document.createTextNode('Show LeaderBoard'))
         premium.appendChild(leaderboardbtn);
@@ -207,11 +227,16 @@ async function deleteExpense(p)
         leaderboardbtn.style.marginRight='30px'
         leaderboardbtn.addEventListener('click',()=>{ getdataforleaderboard()})
 
-        const downloadbtn= document.createElement('button');
-        downloadbtn.appendChild(document.createTextNode('Download Report'))
-        premium.appendChild(downloadbtn);
-        downloadbtn.setAttribute('class','btn btn-success')
-        downloadbtn.addEventListener('click',()=>{downloadreport()})
+        if(expenseinfo.allExpenses.length!=0){
+
+            const downloadbtn= document.createElement('button');
+            downloadbtn.appendChild(document.createTextNode('Download Report'))
+            premium.appendChild(downloadbtn);
+            downloadbtn.setAttribute('class','btn btn-success')
+            downloadbtn.addEventListener('click',()=>{downloadreport()})
+
+        }
+        
 
 
     }
