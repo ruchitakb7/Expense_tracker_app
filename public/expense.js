@@ -45,10 +45,10 @@ async function addExpense(e)
         try{
            const token = localStorage.getItem('token');
            if(token){
-            const response=await axios.post('http://13.211.180.107:3005/addExpense',p,{headers:{"Authorization":token}});
+            const response=await axios.post('/addExpense',p,{headers:{"Authorization":token}});
             console.log('Data has benn added successfully')
             userprofile()
-          // 
+          
             location.href='/home';
            }
            else{
@@ -84,7 +84,7 @@ async function expenseSheet(e)  //refresh
         if(token){
            
             checkrecordpage()
-            const res = await axios.get(`http://13.211.180.107:3005/Expensesheet?page=${page}&pageSize=${record_per_page}`,{headers:{"Authorization":token}});
+            const res = await axios.get(`/Expensesheet?page=${page}&pageSize=${record_per_page}`,{headers:{"Authorization":token}});
             console.log(res.data.allExpenses)
             
           //  const decode= parseJwt(token)
@@ -177,7 +177,7 @@ async function deleteExpense(p)
 {
     try{
         const token = localStorage.getItem('token');  
-        const response= await axios.delete(`http://13.211.180.107:3005/deleteexpense/${p.id}`,{headers:{"Authorization":token}})
+        const response= await axios.delete(`/deleteexpense/${p.id}`,{headers:{"Authorization":token}})
         console.log('Data has been deleted successfully')
         location.href='/home';
         
@@ -189,14 +189,14 @@ async function deleteExpense(p)
 
     paybtn.onclick = async function (e) {
     const token=localStorage.getItem('token');
-    const response = await axios.get('http://13.211.180.107:3005/purchase/premiummembership', {headers:{"Authorization":token}});
+    const response = await axios.get('/purchase/premiummembership', {headers:{"Authorization":token}});
   
     var options = 
     {
       "key":response.data.key_id,
       "order_id":response.data.order.id,
       "handler":async function(response){
-          const res = await axios.post('http://13.211.180.107:3005/purchase/updatetransactionstatus', {
+          const res = await axios.post('/purchase/updatetransactionstatus', {
           order_id:options.order_id,
           payment_id:response.razorpay_payment_id
         }, {headers:{"Authorization":token}});
@@ -267,7 +267,7 @@ async function updateUsertble()
 {
     try{
         const token=localStorage.getItem('token');
-        const userexpesnes= await axios.get('http://13.211.180.107:3005/updateTotalExpense',{headers:{"Authorization":token}});   
+        const userexpesnes= await axios.get('/updateTotalExpense',{headers:{"Authorization":token}});   
         console.log('Data has updated')    
     }
     catch(e){console.log(e)}
@@ -275,7 +275,7 @@ async function updateUsertble()
 
 async function getdataforleaderboard(){
 try{
-       const userData= await axios.get('http://13.211.180.107:3005/getdataforleaderboard')
+       const userData= await axios.get('/getdataforleaderboard')
        console.log(userData.data)
        showLeaderboard(userData.data)
 
@@ -309,7 +309,7 @@ async function downloadreport()
 {
     
         const token= localStorage.getItem('token');
-        await axios.get('http://13.211.180.107:3005/user/download',{headers:{"Authorization":token}})
+        await axios.get('/user/download',{headers:{"Authorization":token}})
         .then((response)=>{
             if(response.status === 200){
                 var a = document.createElement("a");
