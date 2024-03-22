@@ -12,7 +12,7 @@ async function forgotpassword(e)
     }
    
     try{
-        const getemail=await axios.post('/forgotpassword/password',user);
+        const getemail=await axios.post('http://13.211.180.107:3005/forgotpassword/password',user);
         if(getemail)
         {
             alert("link has been sent on your email id")
@@ -22,7 +22,8 @@ async function forgotpassword(e)
     }
     catch(e)
     {
-        alert(e)
+        alert('User Does not Exist')
         console.log(e)
     }
+    email.value="";
 }

@@ -45,7 +45,7 @@ async function addExpense(e)
         try{
            const token = localStorage.getItem('token');
            if(token){
-            const response=await axios.post('/addExpense',p,{headers:{"Authorization":token}});
+            const response=await axios.post('http://13.211.180.107:3005/addExpense',p,{headers:{"Authorization":token}});
             console.log('Data has benn added successfully')
             userprofile()
           // 
@@ -53,7 +53,7 @@ async function addExpense(e)
            }
            else{
             console.log("Do login first")
-            alert('You must be logged in to access this page ')
+            alert('You must be logged in to this page ')
 
            }
           
@@ -61,9 +61,20 @@ async function addExpense(e)
         catch(e)
         {
             console.log(e)
-            alert('you must be logged in to access this page ');
+            alert('you must be logged in to this page ');
         }
 }
+
+function parseJwt (token) {
+    var base64Url = token.split('.')[1];
+    var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+  
+    return JSON.parse(jsonPayload);
+  }
+
 async function expenseSheet(e)  //refresh
 {
     e.preventDefault();
@@ -73,9 +84,11 @@ async function expenseSheet(e)  //refresh
         if(token){
            
             checkrecordpage()
-            const res = await axios.get(`/Expensesheet?page=${page}&pageSize=${record_per_page}`,{headers:{"Authorization":token}});
+            const res = await axios.get(`http://13.211.180.107:3005/Expensesheet?page=${page}&pageSize=${record_per_page}`,{headers:{"Authorization":token}});
             console.log(res.data.allExpenses)
             
+          //  const decode= parseJwt(token)
+          //  console.log(decode)
             userprofile()
             showPremiumusermessage(res.data)
             generatepage(res.data.lastPage)
@@ -164,7 +177,7 @@ async function deleteExpense(p)
 {
     try{
         const token = localStorage.getItem('token');  
-        const response= await axios.delete(`/deleteexpense/${p.id}`,{headers:{"Authorization":token}})
+        const response= await axios.delete(`http://13.211.180.107:3005/deleteexpense/${p.id}`,{headers:{"Authorization":token}})
         console.log('Data has been deleted successfully')
         location.href='/home';
         
@@ -176,14 +189,14 @@ async function deleteExpense(p)
 
     paybtn.onclick = async function (e) {
     const token=localStorage.getItem('token');
-    const response = await axios.get('/purchase/premiummembership', {headers:{"Authorization":token}});
+    const response = await axios.get('http://13.211.180.107:3005/purchase/premiummembership', {headers:{"Authorization":token}});
   
     var options = 
     {
       "key":response.data.key_id,
       "order_id":response.data.order.id,
       "handler":async function(response){
-          const res = await axios.post('/purchase/updatetransactionstatus', {
+          const res = await axios.post('http://13.211.180.107:3005/purchase/updatetransactionstatus', {
           order_id:options.order_id,
           payment_id:response.razorpay_payment_id
         }, {headers:{"Authorization":token}});
@@ -220,6 +233,7 @@ async function deleteExpense(p)
   function showPremiumusermessage(expenseinfo)
 {
     if(expenseinfo.check==true){
+
         premium.innerHTML+="You are now a Premium User !    "
         leaderboardbtn.appendChild(document.createTextNode('Show LeaderBoard'))
         premium.appendChild(leaderboardbtn);
@@ -253,7 +267,7 @@ async function updateUsertble()
 {
     try{
         const token=localStorage.getItem('token');
-        const userexpesnes= await axios.get('/updateTotalExpense',{headers:{"Authorization":token}});   
+        const userexpesnes= await axios.get('http://13.211.180.107:3005/updateTotalExpense',{headers:{"Authorization":token}});   
         console.log('Data has updated')    
     }
     catch(e){console.log(e)}
@@ -261,7 +275,7 @@ async function updateUsertble()
 
 async function getdataforleaderboard(){
 try{
-       const userData= await axios.get('/getdataforleaderboard')
+       const userData= await axios.get('http://13.211.180.107:3005/getdataforleaderboard')
        console.log(userData.data)
        showLeaderboard(userData.data)
 
@@ -295,7 +309,7 @@ async function downloadreport()
 {
     
         const token= localStorage.getItem('token');
-        await axios.get('/user/download',{headers:{"Authorization":token}})
+        await axios.get('http://13.211.180.107:3005/user/download',{headers:{"Authorization":token}})
         .then((response)=>{
             if(response.status === 200){
                 var a = document.createElement("a");

@@ -4,7 +4,6 @@ const User= require('../models/user');
 const sequelize = require('../util/database');
 const s3service = require('../service/s3service');
 const userservices= require('../service/userservices')
-//const { json } = require('sequelize');
 
 
 exports.expensePage = (req,res,next)=>{

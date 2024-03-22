@@ -29,7 +29,7 @@ async function onSubmit(e) {
     
     
     if(val.length==0){
-        const user= await axios.post('/signupuser',userDetails);
+        const user= await axios.post('http://13.211.180.107:3005/signupuser',userDetails);
         console.log('signed up')
         clearInputs();   
         window.location.href='/login';
@@ -37,7 +37,7 @@ async function onSubmit(e) {
     }
     else{
         
-        p.innerHTML=`This Email Id Has Alredy Registered`;
+        p.innerHTML=`This Email Id Has Already Registered`;
     }
  
   } catch (err) {

@@ -6,6 +6,7 @@ const dotenv = require('dotenv');
 dotenv.config()
 const helmet= require('helmet');
 
+
 const seq = require('./util/database.js');
 const User= require('./models/user.js');
 const Expense= require('./models/expense.js');
@@ -37,7 +38,6 @@ Expense.belongsTo(User);
 
 User.hasMany(Order);
 Order.belongsTo(User);
-
 
 
 User.hasMany(forgotpasswordRequest)

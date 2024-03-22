@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
 
 function generateAccessToken(id,name){
+    
     return jwt.sign({id:id,name:name}, 'secretkey');
 }
 
@@ -31,11 +32,11 @@ exports.checkuser= async(req,res,next) =>{
          }
 
         const user=  await User.findAll({where: {email:email,},});
-          console.log(user)
+         
         
           if(user.length > 0)
           {
-           console.log(user[0].name)
+              
               bcrypt.compare(password,user[0].password, async(err,result)=>{
                 if (err) 
                 {

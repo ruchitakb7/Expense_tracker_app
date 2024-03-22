@@ -76,7 +76,7 @@ exports.forgotpassword = async (req, res, next) => {
     }
 
     catch (err) {
-        console.log('err', err.message)
+        res.status(404).json({err})
     }
 }
 
@@ -89,24 +89,20 @@ exports.resetpassword= async(req,res,next) =>{
 
         if(forgetpassword){
             await forgotPasswordRequest.update({ isActive: false},{where:{id:forgetpassword.id}});
-            res.status(200).send(`<html>
-                                  <head>
-                                  href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-                                  <head>
+            res.status(200).send(`<html>  
                                    <body>
-                                   <centre> <form action="/password/updatepassword/${id}" method="get">
+                                    <form action="/password/updatepassword/${id}" method="get">
                                         <label for="newpassword">Enter New password</label><br>
                                         <input name="newpassword" type="password" required></input>
                                         <br>
-                                        <button class='btn btn-primary' >Reset Password</button>
-                                    </form></centre>
+                                        <button>Reset Password</button>
+                                    </form>
                                     <script>
                                         async function formsubmitted(e){
                                             e.preventDefault();
                                             try{
                                                 const res=await axios.get('/password/updatepassword/${id}');
                                                 alert(res.data.message)
-                                                console.log('res.data')
 
                                             }
                                            catch(e){alert(e)}   
@@ -133,22 +129,26 @@ exports.updatepassword= async(req,res,next) =>{
          const userdata = await User.findOne({where:{id:forgotpassworddata.userId}})
          if(userdata)
          {
-            console.log(userdata.password)
+            
             let saltRound=8;
             bcrypt.hash(newpassword,saltRound,async(err,hash)=>{
                 if(err) { 
                     console.log(err)
                     throw new Error(err)
                 }
-                console.log(hash)
+               
                 const updateuserdata= await User.update({password:hash},{where:{id:userdata.id}});
-                console.log(updateuserdata);
-                res.status(201).json({message:'password has been updated',success:true})
+            
+               return res.status(201).json({message:'password has been updated',success:true})
+            // res.redirect('/login')
+            
 
             })
          }
          else{
-            return res.status(404).json({ error: 'No user Exists', success: false})
+           return res.status(404).json({ error: 'No user Exists', success: false})
+        
+           
          }
 
     }catch(e){console.log(e)}
