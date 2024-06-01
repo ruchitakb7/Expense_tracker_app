@@ -40,19 +40,6 @@ exports.addExpense= async(req,res,next) =>
 }
 
 
-exports.expenseSheet= async(req,res,next) =>{
-    try{
-        
-        const sheet= await Expense.findAll({where:{userId:req.user.id}})
-        const premiumcheck= await User.findByPk(req.user.id);
-        
-        res.status(201).json({expenses:sheet,premium:premiumcheck});
-    }
-    catch(e){
-        res.status(500).json(e);
-    }
-}
-
 exports.deleteExpense= async(req,res,next) =>{
     try{
         const t = await sequelize.transaction();
@@ -112,7 +99,7 @@ exports.updateTotalExpense=async (req,res,next)=>{
         const page = +req.query.page;
         
         const pageSize = +req.query.pageSize;
-        console.log(page , pageSize);
+      
         let totalExpenses = await req.user.countExpenses();
 
        // console.log(totalExpenses);
@@ -124,7 +111,7 @@ exports.updateTotalExpense=async (req,res,next)=>{
         const data=await req.user.getExpenses({
                offset:(page-1)*pageSize,
                limit: pageSize,
-               order:[['id','DESC']]
+               order:[['id','ASC']]
         })
 
         res.status(200).json({
