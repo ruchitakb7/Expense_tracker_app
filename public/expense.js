@@ -13,6 +13,7 @@ const a= document.querySelector('#a');
 const selectdiv= document.getElementById('#selctdiv')
 const pagebtn= document.querySelector('#pagebtn');
 const pagesizeval= document.querySelector('#pagesizeval')
+const leaderboardModalElement = document.getElementById("leaderboardModal");
 
 let page;
 let record_per_page;
@@ -46,7 +47,7 @@ async function addExpense(e)
            const token = localStorage.getItem('token');
            if(token){
             const response=await axios.post('/addExpense',p,{headers:{"Authorization":token}});
-            console.log('Data has benn added successfully')
+            console.log('Data has been added successfully')
             userprofile()
           
             location.href='/home';
@@ -75,7 +76,7 @@ function parseJwt (token) {
     return JSON.parse(jsonPayload);
   }
 
-async function expenseSheet(e)  //refresh
+async function expenseSheet(e)  //page will reload after refresh
 {
     e.preventDefault();
    
@@ -285,25 +286,47 @@ try{
    }
 }
 
-function showLeaderboard(userData)
-{
-    leaderboard.style.display='block'
-    const tbody= document.getElementById('tbody')
-  //  console.log(userData);
-    userData.forEach(user=>{
-        const tr=document.createElement('tr');
-        const td1= document.createElement('td');
-        const td2 = document.createElement('td');
-        td1.innerHTML=`${user.name}`;
-        td2.innerHTML=`${user.totalExpenses}`;
+// function showLeaderboard(userData)
+// {
+//     leaderboard.style.display='block'
+//     const tbody= document.getElementById('tbody')
+//   //  console.log(userData);
+//     userData.forEach(user=>{
+//         const tr=document.createElement('tr');
+//         const td1= document.createElement('td');
+//         const td2 = document.createElement('td');
+//         td1.innerHTML=`${user.name}`;
+//         td2.innerHTML=`${user.totalExpenses}`;
 
-        tr.appendChild(td1)
-        tr.appendChild(td2)
-        tbody.appendChild(tr);
+//         tr.appendChild(td1)
+//         tr.appendChild(td2)
+//         tbody.appendChild(tr);
 
-    }) 
+//     }) 
     
+// }
+
+function showLeaderboard(userData) {
+    const leaderboardModal = new bootstrap.Modal(document.getElementById('leaderboardModal'));
+    leaderboardModal.show();
+
+    const tbody = document.getElementById('tbody');
+    tbody.innerHTML = ''; 
+
+    userData.forEach(user => {
+        const tr = document.createElement('tr');
+        const td1 = document.createElement('td');
+        const td2 = document.createElement('td');
+
+        td1.innerHTML = `${user.name}`;
+        td2.innerHTML = `${user.totalExpenses}`;
+
+        tr.appendChild(td1);
+        tr.appendChild(td2);
+        tbody.appendChild(tr);
+    });
 }
+
 
 async function downloadreport()
 {
